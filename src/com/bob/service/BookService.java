@@ -58,4 +58,8 @@ public class BookService {
 		        }
 			return page;
 	}
+	
+	public void delList(List<String> id){
+		bookDao.deleteList(id);
+	}
 }

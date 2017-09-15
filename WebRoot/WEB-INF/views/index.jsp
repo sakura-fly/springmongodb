@@ -32,16 +32,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <a href="javascript:void(0);" >
                     增加信息</a>
             </li>
-            <!--<li>
-                <a href="javascript:void(0);">
+            <li>
+                <a id="del" href="javascript:void(0);">
                     删除信息</a>
-            </li>-->
+            </li>
         </ul>
 </div>
 <div  class="containerWarp" id="bookContainmer">
 <table class="table table-hover marginb5" style="margin-bottom:10px;">
 		<thead>
 				<tr style="background:#fff !important;">
+					<th class="title-column">选择</th>
 					<th class="title-column">编号</th>
 					<th class="title-column">书籍名称</th>
 					<th class="title-column">所属类型</th>
@@ -149,12 +150,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					</div>
 					</form>
 					<div  class="bottombar" >
+
 						<div  class="body" ><a href="javascript:void(0);" class="btn"  data="updatesave">保存信息</a>
 					</div></div>
 					<div class="message" data="message"></div>
 			</div>
 	</div>
 </div>
+
 
 
 </body>
@@ -167,7 +170,7 @@ $(document).ready(function(){
 			$("#bookContainmer").find("div.pager-inner").pagination({ colspan : 8 ,pager_rowcontainer : $("#bookContainmer_layout table tbody") ,  items_per_page:20,url: QHDomain.cdn + "service/bookquery.do" , "query": {} ,	callback: function( t, q , data ){	
 						$("#bookContainmer table tbody").html("");
 						$.each(data,function(pos , entity){  					
-								$('<tr data="contentWrap_' + entity.id + '"> <td><span>' + entity.id  + '</span></td>  <td><span>' + entity.bookName + '</span></td> <td><span>' + entity.bookType + '</span></td>   <td><span>' + entity.resCount + '</span></td> <td  ><span>' + entity.author + '</span></td><td  ><span>' + entity.publisher + '</span></td>  <td  ><span>' + entity.publishDate + '</span></td>  <td   nowrap="nowrap"><div class="opcontainer" ><a href="javascript:void(0);" style="float:left;"  ><span class="btn2 blue"  sid="update"  data-dt=\'' + JSON.stringify(entity)   + '\'>修改</span></a><a   href="javascript:void(0);" style="float:left;" ><span class="btn2 blue"   sid="delete"  data-id="' + entity.id   + '">删除</span></a></div></td>      </tr>').appendTo("#bookContainmer table tbody");
+								$('<tr data="contentWrap_' + entity.id + '"> <td><span>' + '<input type="checkbox" tag="' + entity.id + '" >'  + '</span></td>  <td><span>' + entity.bookName + '</span></td><td><span>' + entity.bookName + '</span></td> <td><span>' + entity.bookType + '</span></td>   <td><span>' + entity.resCount + '</span></td> <td  ><span>' + entity.author + '</span></td><td  ><span>' + entity.publisher + '</span></td>  <td  ><span>' + entity.publishDate + '</span></td>  <td   nowrap="nowrap"><div class="opcontainer" ><a href="javascript:void(0);" style="float:left;"  ><span class="btn2 blue"  sid="update"  data-dt=\'' + JSON.stringify(entity)   + '\'>修改</span></a><a   href="javascript:void(0);" style="float:left;" ><span class="btn2 blue"   sid="delete"  data-id="' + entity.id   + '">删除</span></a></div></td>      </tr>').appendTo("#bookContainmer table tbody");
 							});
 							$("span[sid=update]").on("click", function(){
 									var entity = $(this).data('dt');
@@ -220,6 +223,45 @@ $(document).ready(function(){
 			}
 		} 
 		});
+	});
+
+	$("#del").click(function(event) {
+			var h = $("input[type='checkbox']:checked");
+			var l = [];
+			for(var i = 0; i < h.length; i++){
+				// alert(h[i].getAttribute('tag'))
+				l[i] = h[i].getAttribute('tag');
+			}
+			var data = {
+				idList:JSON.stringify(l)
+			}
+			if(l.length == 0){
+				alert('请选择至少一个用户')
+			} else {
+				// alert(JSON.stringify(data))
+				$.ajax({
+					url: '<%=basePath%>service/bookdeletelist.do',
+					type: 'POST',
+					dataType: 'json',
+					data: data,
+				})
+				.done(function(e) {
+					if(e.result == 1){
+						alert('成功')
+					} else {
+						alert('失败')
+					}
+					
+				})
+				.fail(function() {
+					alert('失败')
+					console.log("error");
+				})
+				.always(function() {
+					console.log("complete");
+				});
+				
+			}
 	});
 
 	

@@ -49,6 +49,11 @@ public abstract class MongoGenDao<T> {
 		}
 		
 		
+		public List<T> findAll(){
+			return this.mongoTemplate.findAll(this.getEntityClass());
+		}
+		
+		
 		
 		/**
 		 * 通过条件查询单个实体
@@ -145,6 +150,24 @@ public abstract class MongoGenDao<T> {
 		public void delete(T t)
 		{
 			this.mongoTemplate.remove(t);
+		}
+		
+		/**
+		 * 批量删除
+		 * 
+		 */
+		public void deleteList(List<String> id)
+		{
+			Criteria criteria = Criteria.where("_id").in(id);
+			if (null != criteria)
+			{
+				Query query = new Query(criteria);
+				if (null != query && this.queryOne(query) != null)
+				{
+					System.out.println(query);
+					this.mongoTemplate.remove(query, this.getEntityClass());
+				}
+			}
 		}
 
 		
