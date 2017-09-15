@@ -34,7 +34,8 @@ public class BookService {
 		up.set("ResCount",book.getResCount());
 		up.set("Author",book.getAuthor());
 		up.set("Publisher",book.getPublisher());
-		up.set("PublishDate",book.getPublishDate());
+		up.set("Member",book.getMember());
+		
 		bookDao.updateFirst(query , up);
 	}
 	

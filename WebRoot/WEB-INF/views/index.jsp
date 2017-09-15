@@ -185,6 +185,7 @@ $(document).ready(function(){
 									$("#bookuform input[id=author]").val( entity.author );
 									$("#bookuform input[id=publisher]").val( entity.publisher );
 									$("#bookuform input[id=publishdt]").val( entity.publishDate); 
+									$("#bookuform input[id=member]").val( entity.member.realName); 
 									$("div[data=update]").show();
 							});
 							
